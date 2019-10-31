@@ -174,6 +174,3 @@ def store_raw_images(keyword):
 
 			except TimeoutError:
 				print("Timeout: " + image_url)
-	
-	return raw_images_list
-
