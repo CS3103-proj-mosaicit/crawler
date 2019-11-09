@@ -56,6 +56,34 @@ def scrape_pixabay(keyword):
 
 	return urls
 
+# function to scrap more image urls from pixabay
+def scrape_more_pixabay(keyword):
+
+	# change based on no. of pages want to crawl
+	max_pages = 5
+	pattern = r'src="https://cdn.pixabay.com\S*"'
+	url = to_pixabay_url(keyword)
+
+	urls = []
+	for index in range(1, max_pages+1):
+		url_page = url+"/?pagi=" + str(index)
+
+		try:
+			response = requests.get(url_page, timeout=(4, 5), verify=False)
+
+		except Exception:
+			print('The request time out or invalid url: ' + url_page)
+			return []
+
+		if response.status_code != 200:
+			print("No result")
+			return []
+
+		content = response.content.decode('latin-1')
+		urls += [match[5:-1] for match in re.findall(pattern, content)]
+
+	return urls
+
 # function to scrap image urls from unsplash
 def scrape_unsplash(keyword):
 
@@ -174,3 +202,5 @@ def store_raw_images(keyword):
 
 			except TimeoutError:
 				print("Timeout: " + image_url)
+
+	
